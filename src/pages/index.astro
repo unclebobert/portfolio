@@ -1,11 +1,561 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+type PortfolioItem = {
+	title: string;
+	year: string;
+	description: string;
+	technologies: string[];
+	url?: string;
+	note?: string;
+};
+
+const contactLinks = [
+	{ label: 'GitHub', href: 'https://github.com/your-handle' },
+	{ label: 'LinkedIn', href: 'https://www.linkedin.com/in/your-handle' },
+	{ label: 'Email', href: 'mailto:hello@example.com' },
+];
+
+const skills = [
+	'Javascript',
+	'Typescript',
+	'HTML/CSS',
+	'Python',
+	'SQL',
+	'React',
+	'Vite',
+	'Astro',
+	'Flask',
+	'Docker',
+];
+
+const projects: PortfolioItem[] = [
+	{
+		title: 'Connections - Discord Activity',
+		year: '2026',
+		url: 'https://discord.com/discovery/applications/1506187422281498684',
+		description:
+			"Unofficial port of the New York Times' popular Connections as a Discord activity.",
+		technologies: [
+			'Typescript',
+			'React',
+			'Vite',
+			'Cloudflare (Workers, Durable Objects, KV)',
+			'Hono',
+		],
+	},
+	{
+		title: 'GreedyPay',
+		year: '2025',
+		url: 'https://unclebobert.github.io/greedy-pay/',
+		description:
+			'Fairly simple bill-splitting app. Collates multiple expenses and determines the most convenient way for everyone to be paid in the fewest transactions possible.',
+		technologies: ['Typescript', 'React', 'Vite', 'Dexie'],
+	},
+	{
+		title: 'MRI Annotation System',
+		year: '2025',
+		note: 'UNSW Computer Science Project',
+		description:
+			'A web based system to allow expert radiologists to easily annotate brain MRIs for potential lacunar infarct candidates, which are provided by a basic AI external to the project. The data from the radiologists can then be used to fine-tune the AI model.',
+		technologies: ['Typescript', 'React', 'Vite', 'Docker', 'Python', 'Flask'],
+	},
+];
+
+const work: PortfolioItem[] = [
+	{
+		title: 'Tutoring Centre Administration System',
+		year: '2023 - Present',
+		description:
+			'Includes the administrator, staff and student portals of a tutoring centre.',
+		technologies: ['Javascript', 'HTML/CSS', 'Python', 'Flask', 'SQL'],
+	},
+	{
+		title: 'Tutoring Centre Website',
+		year: '2026',
+		note: 'Not currently deployed yet',
+		description:
+			'Revamp of the user-facing public promotional website that includes several interactive elements such as a course outline viewer.',
+		technologies: ['Javascript', 'HTML/CSS', 'React', 'Astro'],
+	},
+];
+
+const allItems = [...projects, ...work];
+
+const itemUsesSkill = (item: PortfolioItem, skill: string) => {
+	return item.technologies.includes(skill);
+};
+
+const getRelatedItems = (skill: string) =>
+	allItems.filter((item) => itemUsesSkill(item, skill));
+
+const slugify = (value: string) =>
+	value
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/(^-|-$)/g, '');
 ---
 
 <Layout>
-	<Welcome />
+	<a class="skip-link" href="#content">Skip to content</a>
+
+	<main id="content" class="page-shell">
+		<header class="intro" aria-labelledby="intro-title">
+			<h1 id="intro-title">Hi, I'm Jackson</h1>
+			<p>
+				I'm a full-stack developer currently focused on web development,
+				but always looking to explore new things and dreaming up new ideas.
+        Sometimes I even get around to finishing them.
+			</p>
+
+			<nav class="contact-links" aria-label="Contact links">
+				{
+					contactLinks.map((link) => (
+						<a href={link.href} rel="me">
+							{link.label}
+						</a>
+					))
+				}
+			</nav>
+		</header>
+
+		<section class="section" aria-labelledby="skills-title">
+			<div class="section-heading">
+				<h2 id="skills-title">Skills</h2>
+			</div>
+
+			<div class="skills-list" aria-label="Skills">
+				{
+					skills.map((skill) => {
+						const relatedItems = getRelatedItems(skill);
+
+						return (
+							<details class="skill">
+								<summary>{skill}</summary>
+								<div class="skill-detail">
+									{relatedItems.length > 0 ? (
+										<ul>
+											{relatedItems.map((item) => (
+												<li>
+													<a href={`#${slugify(item.title)}`}>
+														{item.title}
+													</a>
+												</li>
+											))}
+										</ul>
+									) : (
+										<p>No highlighted project yet.</p>
+									)}
+								</div>
+							</details>
+						);
+					})
+				}
+			</div>
+		</section>
+
+		<section class="section" aria-labelledby="projects-title">
+			<div class="section-heading">
+				<h2 id="projects-title">Projects</h2>
+			</div>
+
+			<div class="item-list">
+				{
+					projects.map((project) => (
+						<article class="item" id={slugify(project.title)}>
+							<div class="item-header">
+								<h3>
+									{project.url ? (
+										<a href={project.url}>{project.title}</a>
+									) : (
+										project.title
+									)}
+								</h3>
+								<span>{project.year}</span>
+							</div>
+							{project.note && <p class="note">{project.note}</p>}
+							<p>{project.description}</p>
+							<details class="tech-detail">
+								<summary>Technologies</summary>
+								<ul class="tech-list">
+									{project.technologies.map((technology) => (
+										<li>{technology}</li>
+									))}
+								</ul>
+							</details>
+						</article>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="section" aria-labelledby="work-title">
+			<div class="section-heading">
+				<h2 id="work-title">Work</h2>
+				<p>Contact me for more details.</p>
+			</div>
+
+			<div class="item-list">
+				{
+					work.map((role) => (
+						<article class="item" id={slugify(role.title)}>
+							<div class="item-header">
+								<h3>{role.title}</h3>
+								<span>{role.year}</span>
+							</div>
+							{role.note && <p class="note">{role.note}</p>}
+							<p>{role.description}</p>
+							<details class="tech-detail">
+								<summary>Technologies</summary>
+								<ul class="tech-list">
+									{role.technologies.map((technology) => (
+										<li>{technology}</li>
+									))}
+								</ul>
+							</details>
+						</article>
+					))
+				}
+			</div>
+		</section>
+	</main>
 </Layout>
+
+<style is:global>
+	:root {
+		color-scheme: light;
+		--bg: #ffffff;
+		--text: #202124;
+		--muted: #686f76;
+		--faint: #f4f4f2;
+		--line: #deded9;
+		--link: #0f766e;
+		--link-quiet: #5b6564;
+		--focus: #0f766e;
+		font-family:
+			Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+			"Segoe UI", sans-serif;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
+
+	body {
+		margin: 0;
+		min-width: 320px;
+		background: var(--bg);
+		color: var(--text);
+		font-size: 16px;
+		line-height: 1.7;
+		text-rendering: optimizeLegibility;
+	}
+
+	a {
+		color: var(--link);
+		text-decoration-color: color-mix(in srgb, var(--link), transparent 54%);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.18em;
+	}
+
+	a:hover {
+		text-decoration-color: currentColor;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--focus);
+		outline-offset: 4px;
+	}
+
+	.skip-link {
+		position: fixed;
+		left: 1rem;
+		top: 1rem;
+		z-index: 10;
+		padding: 0.4rem 0.65rem;
+		background: var(--bg);
+		border: 1px solid var(--line);
+		color: var(--text);
+		transform: translateY(-160%);
+	}
+
+	.skip-link:focus {
+		transform: translateY(0);
+	}
+
+	.page-shell {
+		width: min(100% - 40px, 720px);
+		margin: 0 auto;
+		padding: 72px 0 56px;
+	}
+
+	.intro {
+		display: grid;
+		grid-template-columns: 42px 1fr;
+		gap: 22px 18px;
+		align-items: center;
+	}
+
+	.mark {
+		display: grid;
+		place-items: center;
+		width: 42px;
+		height: 42px;
+		border: 1px solid var(--line);
+		border-radius: 50%;
+		background: var(--faint);
+	}
+
+	.mark img {
+		display: block;
+		width: 28px;
+		height: 28px;
+	}
+
+	.contact-links {
+    width: 100%;
+		display: flex;
+		gap: 0.45rem 1rem;
+		align-items: center;
+		font-size: 0.95rem;
+	}
+
+	.contact-links a {
+		color: var(--link-quiet);
+		text-decoration: none;
+	}
+
+	.contact-links a:hover {
+		color: var(--link);
+	}
+
+	h1,
+	h2,
+	h3,
+	p {
+		margin: 0;
+	}
+
+	h1 {
+		grid-column: 1 / -1;
+		margin-top: 16px;
+		font-size: 2.4rem;
+		font-weight: 700;
+		letter-spacing: 0;
+		line-height: 0.98;
+	}
+
+	.intro > p {
+		grid-column: 1 / -1;
+		max-width: 62ch;
+		color: var(--muted);
+		font-size: 1.08rem;
+	}
+
+	.section {
+		margin-top: 68px;
+		padding-top: 30px;
+		border-top: 1px solid var(--line);
+	}
+
+	.section-heading {
+		display: grid;
+		grid-template-columns: minmax(130px, 0.36fr) 1fr;
+		gap: 18px;
+		align-items: baseline;
+		margin-bottom: 24px;
+	}
+
+	h2 {
+		font-size: 1.4rem;
+		font-weight: 700;
+		line-height: 1.35;
+	}
+
+	.section-heading p,
+	.footer p,
+	.note {
+		color: var(--muted);
+		font-size: 0.94rem;
+	}
+
+	.skills-list {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 8px 18px;
+	}
+
+	details {
+		position: relative;
+	}
+
+	summary {
+		cursor: pointer;
+		color: var(--link-quiet);
+		list-style: none;
+	}
+
+	summary::-webkit-details-marker {
+		display: none;
+	}
+
+	summary::after {
+		content: " +";
+		color: var(--muted);
+	}
+
+	details[open] > summary {
+		color: var(--text);
+	}
+
+	details[open] > summary::after {
+		content: " -";
+	}
+
+	.skill {
+		min-height: 32px;
+	}
+
+	.skill summary {
+		display: inline-flex;
+		min-height: 32px;
+		align-items: center;
+	}
+
+	.skill-detail {
+		margin: 3px 0 14px;
+		padding-left: 14px;
+		border-left: 1px solid var(--line);
+		color: var(--muted);
+		font-size: 0.94rem;
+	}
+
+	.skill-detail ul,
+	.tech-list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.skill-detail li + li {
+		margin-top: 2px;
+	}
+
+	.item-list {
+		display: grid;
+		gap: 34px;
+	}
+
+	.item {
+		scroll-margin-top: 24px;
+	}
+
+	.item-header {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		gap: 16px;
+		align-items: baseline;
+	}
+
+	h3 {
+		font-size: 1.08rem;
+		font-weight: 650;
+		line-height: 1.35;
+	}
+
+	h3 a {
+		color: inherit;
+	}
+
+	.item-header span {
+		color: var(--muted);
+		font-size: 0.9rem;
+		white-space: nowrap;
+	}
+
+	.item > p {
+		margin-top: 8px;
+		max-width: 68ch;
+	}
+
+	.tech-detail {
+		margin-top: 10px;
+	}
+
+	.tech-detail summary {
+		display: inline-flex;
+		min-height: 30px;
+		align-items: center;
+		font-size: 0.94rem;
+	}
+
+	.tech-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-top: 6px;
+	}
+
+	.tech-list li {
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		padding: 2px 9px;
+		background: var(--faint);
+		color: var(--muted);
+		font-size: 0.84rem;
+		line-height: 1.7;
+	}
+
+	.footer {
+		margin-top: 76px;
+		padding-top: 26px;
+		border-top: 1px solid var(--line);
+	}
+
+	.footer .contact-links {
+		margin-top: 8px;
+	}
+
+	@media (max-width: 640px) {
+		body {
+			font-size: 15.5px;
+		}
+
+		.page-shell {
+			width: min(100% - 30px, 720px);
+			padding-top: 42px;
+		}
+
+		.intro {
+			grid-template-columns: 1fr;
+			gap: 14px;
+		}
+
+		.contact-links {
+			gap: 0.35rem 0.8rem;
+		}
+
+		h1 {
+			margin-top: 12px;
+		}
+
+		.section {
+			margin-top: 54px;
+		}
+
+		.section-heading,
+		.skills-list,
+		.item-header {
+			grid-template-columns: 1fr;
+			gap: 6px;
+		}
+
+		.item-header span {
+			white-space: normal;
+		}
+	}
+</style>
