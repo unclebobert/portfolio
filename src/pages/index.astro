@@ -11,9 +11,9 @@ type PortfolioItem = {
 };
 
 const contactLinks = [
-  { label: 'GitHub', href: 'https://github.com/your-handle' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/your-handle' },
-  { label: 'Email', href: 'mailto:hello@example.com' },
+  { label: 'GitHub', href: 'https://github.com/unclebobert' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/jfu421' },
+  { label: 'Email', href: 'mailto:jacksonfu777@gmail.com' },
 ];
 
 const skills = [
@@ -99,27 +99,27 @@ const slugify = (value: string) =>
 <Layout>
   <a class="skip-link" href="#content">Skip to content</a>
 
+  <header class="site-header">
+    <nav class="site-nav" aria-label="Page sections">
+      <a href="#intro">Intro</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#work">Work</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
   <main id="content" class="page-shell">
-    <header class="intro" aria-labelledby="intro-title">
+    <header class="intro" id="intro" aria-labelledby="intro-title">
       <h1 id="intro-title">Hi, I'm Jackson</h1>
       <p>
         I'm a full-stack developer currently focused on web development,
         but always looking to explore new things and dreaming up new ideas.
         Sometimes I even get around to finishing them.
       </p>
-
-      <nav class="contact-links" aria-label="Contact links">
-        {
-          contactLinks.map((link) => (
-            <a href={link.href} rel="me">
-              {link.label}
-            </a>
-          ))
-        }
-      </nav>
     </header>
 
-    <section class="section" aria-labelledby="skills-title">
+    <section class="section" id="skills" aria-labelledby="skills-title">
       <div class="section-heading">
         <h2 id="skills-title">Skills</h2>
       </div>
@@ -154,7 +154,7 @@ const slugify = (value: string) =>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="projects-title">
+    <section class="section" id="projects" aria-labelledby="projects-title">
       <div class="section-heading">
         <h2 id="projects-title">Projects</h2>
       </div>
@@ -189,10 +189,10 @@ const slugify = (value: string) =>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="work-title">
+    <section class="section" id="work" aria-labelledby="work-title">
       <div class="section-heading">
         <h2 id="work-title">Work</h2>
-        <p>Contact me for more details.</p>
+        <p>For more details about these, <a href="#contact">contact me</a>.</p>
       </div>
 
       <div class="item-list">
@@ -217,6 +217,22 @@ const slugify = (value: string) =>
           ))
         }
       </div>
+    </section>
+
+    <section class="section contact-section" id="contact" aria-labelledby="contact-title">
+      <div class="section-heading">
+        <h2 id="contact-title">Contact</h2>
+      </div>
+
+      <nav class="contact-links" aria-label="Contact links">
+        {
+          contactLinks.map((link) => (
+            <a href={link.href} rel="me">
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
     </section>
   </main>
 </Layout>
@@ -265,6 +281,7 @@ const slugify = (value: string) =>
 
   a:hover {
     text-decoration-color: currentColor;
+    color: var(--interactive-hover);
   }
 
   :focus-visible {
@@ -288,10 +305,44 @@ const slugify = (value: string) =>
     transform: translateY(0);
   }
 
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    border-bottom: 1px solid color-mix(in srgb, var(--line), transparent 30%);
+    background: color-mix(in srgb, var(--bg), transparent 8%);
+    backdrop-filter: blur(12px);
+  }
+
+  .site-nav {
+    width: 100%;
+    max-width: 720px;
+    min-height: 56px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    text-decoration: none;
+  }
+
+  .site-name {
+    flex: 0 0 auto;
+    font-weight: 650;
+  }
+
+  .site-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.35rem 1rem;
+    font-size: 0.95rem;
+  }
+
   .page-shell {
     width: min(100% - 40px, 720px);
     margin: 0 auto;
-    padding: 72px 0 56px;
+    padding: 56px 0 56px;
   }
 
   .intro {
@@ -361,13 +412,18 @@ const slugify = (value: string) =>
     margin-top: 68px;
     padding-top: 30px;
     border-top: 1px solid var(--line);
+    scroll-margin-top: 76px;
+  }
+
+  .intro {
+    scroll-margin-top: 76px;
   }
 
   .section-heading {
-    display: grid;
-    grid-template-columns: minmax(130px, 0.36fr) 1fr;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
     gap: 18px;
-    align-items: baseline;
     margin-bottom: 24px;
   }
 
@@ -555,6 +611,11 @@ const slugify = (value: string) =>
     margin-top: 8px;
   }
 
+  .contact-section {
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--line);
+  }
+
   @media (max-width: 640px) {
     body {
       font-size: 15.5px;
@@ -563,6 +624,14 @@ const slugify = (value: string) =>
     .page-shell {
       width: min(100% - 30px, 720px);
       padding-top: 42px;
+    }
+
+    .site-nav {
+      min-height: auto;
+      padding: 12px 0;
+      width: min(100% - 30px, 720px);
+      justify-content: flex-end;
+      gap: 0.25rem 0.85rem;
     }
 
     .intro {
@@ -580,13 +649,11 @@ const slugify = (value: string) =>
 
     .section {
       margin-top: 54px;
+      scroll-margin-top: 104px;
     }
 
-    .section-heading,
-    .skills-list,
-    .item-header {
-      grid-template-columns: 1fr;
-      gap: 6px;
+    .intro {
+      scroll-margin-top: 104px;
     }
 
     .item-header span {
@@ -596,7 +663,9 @@ const slugify = (value: string) =>
 
   @media (prefers-reduced-motion: reduce) {
     summary,
-    summary::after {
+    summary::after,
+    .site-name,
+    .site-nav a {
       transition: none;
     }
 
