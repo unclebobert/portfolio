@@ -122,6 +122,7 @@ const slugify = (value: string) =>
     <section class="section" id="skills" aria-labelledby="skills-title">
       <div class="section-heading">
         <h2 id="skills-title">Skills</h2>
+        <p>Click on a technology to see what I've used it for.</p>
       </div>
 
       <div class="skills-list" aria-label="Skills">
@@ -326,11 +327,6 @@ const slugify = (value: string) =>
     text-decoration: none;
   }
 
-  .site-name {
-    flex: 0 0 auto;
-    font-weight: 650;
-  }
-
   .site-nav {
     display: flex;
     flex-wrap: wrap;
@@ -352,33 +348,12 @@ const slugify = (value: string) =>
     align-items: center;
   }
 
-  .mark {
-    display: grid;
-    place-items: center;
-    width: 42px;
-    height: 42px;
-    border: 1px solid var(--line);
-    border-radius: 50%;
-    background: var(--faint);
-  }
-
-  .mark img {
-    display: block;
-    width: 28px;
-    height: 28px;
-  }
-
   .contact-links {
     width: 100%;
     display: flex;
     gap: 0.45rem 1rem;
     align-items: center;
     font-size: 0.95rem;
-  }
-
-  .contact-links a {
-    color: var(--link-quiet);
-    text-decoration: none;
   }
 
   .contact-links a:hover {
@@ -434,7 +409,6 @@ const slugify = (value: string) =>
   }
 
   .section-heading p,
-  .footer p,
   .note {
     color: var(--muted);
     font-size: 0.94rem;
@@ -601,16 +575,6 @@ const slugify = (value: string) =>
     line-height: 1.7;
   }
 
-  .footer {
-    margin-top: 76px;
-    padding-top: 26px;
-    border-top: 1px solid var(--line);
-  }
-
-  .footer .contact-links {
-    margin-top: 8px;
-  }
-
   .contact-section {
     padding-bottom: 30px;
     border-bottom: 1px solid var(--line);
@@ -664,7 +628,6 @@ const slugify = (value: string) =>
   @media (prefers-reduced-motion: reduce) {
     summary,
     summary::after,
-    .site-name,
     .site-nav a {
       transition: none;
     }
